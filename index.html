@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AR-VLA | Robot & AI Paper</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="page">
+        <main class="container">
+            <section class="hero">
+
+                <p class="accept-badge">Accepted in Robotics: Science and Systems (RSS) 2026</p>
+
+                <h1>
+                    <span>AR-VLA: Autoregressive Action Expert</span>
+                    <span>for Vision-Language-Action Models</span>
+                </h1>
+                <p class="authors">
+                    Yutong Hu<sup>1,2</sup>, Jan-Nico Zaech<sup>1</sup>, Nikolay Nikolov<sup>1</sup>, Yuanqi
+                    Yao<sup>1</sup>, Sombit Dey<sup>1</sup>, Giuliano Albanese<sup>1</sup>,<br />
+                    Renaud Detry<sup>2</sup>, Luc Van Gool<sup>1</sup>, Danda
+                    Paudel<sup>1</sup>
+                </p>
+                <p class="affiliations"><sup>1</sup> INSAIT &nbsp;&nbsp; <sup>2</sup> KU Leuven</p>
+                <div class="hero-actions">
+                    <a class="action-btn" href="https://arxiv.org/abs/2603.10126" target="_blank" rel="noreferrer">Paper
+                        <span class="btn-icon">arXiv</span></a>
+                    <a class="action-btn" href="https://github.com" target="_blank" rel="noreferrer">Code <span
+                            class="btn-icon">&lt;/&gt;</span></a>
+                    <a class="action-btn" href="https://huggingface.co" target="_blank" rel="noreferrer">Model <span
+                            class="btn-icon">🤗</span></a>
+                    <a class="action-btn" href="#pusht2-task">PushT2 Task & Data <span class="btn-icon">🎯</span></a>
+                </div>
+            </section>
+
+            <section class="content-block">
+                <h2>Main Idea</h2>
+                <img src="main.png" alt="AR-VLA main idea illustration" class="main-idea-img" />
+                <div class="stacked-text">
+                    <p>Most VLA policies follow a <strong>snapshot-to-chunk</strong> loop: observe a frame, predict a
+                        chunk,
+                        execute, then reset for the next chunk. This creates temporal discontinuities and amnesia
+                        between chunks.
+
+                        AR-VLA keeps the same perception backbone for semantic understanding, but replaces chunk
+                        heads
+                        with a standalone <strong>autoregressive action expert</strong>.</p>
+                    <p></p>
+                    <p></p>
+                </div>
+
+            </section>
+
+            <section class="content-block">
+                <h2>Main Results</h2>
+                <p class="section-intro">AR-VLA shifts robotics from reactive “snapshot” control to continuous streaming
+                    action generation. This architecture provides two core advantages: inherent spatio-temporal
+                    consistency from async-interval autoregressive generation, and native history-awareness for
+                    multi-stage decision making.</p>
+
+                <div class="video-group">
+                    <h3>Smoothness Comparisons</h3>
+                    <p class="group-desc">In side-by-side comparisons with a flow-matching baseline of the same
+                        Pi-Zero-scale structure, AR-VLA produces visibly smoother trajectories and reduces
+                        micro-stutters at chunk boundaries.</p>
+                    <div class="video-grid">
+                        <article class="video-card ours">
+                            <video controls preload="metadata" muted playsinline
+                                src="smooth/Vid20260113184330.mp4"></video>
+                            <p>AR-VLA: smooth action streaming</p>
+                        </article>
+                        <article class="video-card baseline">
+                            <video controls preload="metadata" muted playsinline
+                                src="smooth/Vid20260113184330%201.mp4"></video>
+                            <p>Flow-Matching Baseline: inter-chunk stutters</p>
+                        </article>
+                        <article class="video-card baseline">
+                            <video controls preload="metadata" muted playsinline
+                                src="smooth/Vid20260113184330%202.mp4"></video>
+                            <p>openVLA: longer per-action generation time</p>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="video-group">
+                    <h3>History-Awareness Experiments</h3>
+                    <p class="group-desc">History-awareness is critical when perception becomes ambiguous.</p>
+
+                    <h4 id="pusht2-task">Extended Push-T: PushT2 task</h4>
+                    <p class="group-desc">Across long-horizon tasks such as extended Push-T with multi-goal completion,
+                        autoregressive memory prevents confusion between goals.</p>
+                    <div class="video-grid">
+                        <article class="video-card baseline">
+                            <video controls preload="metadata" muted playsinline
+                                src="pusht2/eval_episode_focus_one.mp4"></video>
+                            <p>Diffusion Policy: Focus only on one goal</p>
+                        </article>
+                        <article class="video-card baseline">
+                            <video controls preload="metadata" muted playsinline
+                                src="pusht2/eval_episode_switch.mp4"></video>
+                            <p>Diffusion Policy: Not aware of the achieved goal</p>
+                        </article>
+                        <article class="video-card ours">
+                            <video controls preload="metadata" muted playsinline src="pusht2/ar1.mp4"></video>
+                            <p>AR: History-Aware, reach goal in order</p>
+                        </article>
+                        <article class="video-card ours">
+                            <video controls preload="metadata" muted playsinline src="pusht2/ar2.mp4"></video>
+                            <p>AR: History-Aware, reach goal in order</p>
+                        </article>
+                    </div>
+
+                    <h4>Realworld: Stack 3 objects task</h4>
+                    <p class="group-desc">In hidden-object settings (for example, the battery-under-cup scenario),
+                        AR-VLA remembers latent task state and reaches 81.2% average completion rate where snapshot
+                        policies collapse once the object leaves view.</p>
+                    <div class="video-grid">
+                        <article class="video-card baseline">
+                            <video controls preload="metadata" muted playsinline src="history/Fm1.mp4"></video>
+                            <p>Flow-Matching Baseline 1</p>
+                        </article>
+                        <article class="video-card baseline">
+                            <video controls preload="metadata" muted playsinline src="history/fm2.mp4"></video>
+                            <p>Flow-Matching Baseline 2</p>
+                        </article>
+                        <article class="video-card ours">
+                            <video controls preload="metadata" muted playsinline src="history/ar1.mp4"></video>
+                            <p>AR-VLA 1</p>
+                        </article>
+                        <article class="video-card ours">
+                            <video controls preload="metadata" muted playsinline src="history/ar2.mp4"></video>
+                            <p>AR-VLA 2</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-block">
+                <h2>Standard Benchmarks</h2>
+                <p class="section-intro">Beyond smoothness and memory benefits, standard simulation and real-robot
+                    benchmarks show AR-VLA can directly replace chunk-based action heads while matching or surpassing
+                    specialist and generalist state-of-the-art baselines.</p>
+
+                <div class="video-group">
+                    <h3>LeRobot Environments (Specialist Policy)</h3>
+                    <div class="video-grid">
+                        <article class="video-card">
+                            <video controls preload="metadata" muted playsinline src="lerobot/t.mp4"></video>
+                            <p>LeRobot PushT</p>
+                        </article>
+                        <article class="video-card">
+                            <video controls preload="metadata" muted playsinline src="lerobot/pick.mp4"></video>
+                            <p>LeRobot Aloha pick</p>
+                        </article>
+                        <article class="video-card">
+                            <video controls preload="metadata" muted playsinline src="lerobot/insert.mp4"></video>
+                            <p>LeRobot Aloha insert</p>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="video-group">
+                    <h3>Bridge to Simpler Benchmark (VLA, zeroshot)</h3>
+                    <div class="video-grid">
+                        <article class="video-card">
+                            <video controls preload="metadata" muted playsinline src="simpler/Media1.mp4"></video>
+                            <p>Simpler Task 1</p>
+                        </article>
+                        <article class="video-card">
+                            <video controls preload="metadata" muted playsinline src="simpler/Media2.mp4"></video>
+                            <p>Simpler Task 2</p>
+                        </article>
+                        <article class="video-card">
+                            <video controls preload="metadata" muted playsinline src="simpler/Media3.mp4"></video>
+                            <p>Simpler Task 3</p>
+                        </article>
+                        <article class="video-card">
+                            <video controls preload="metadata" muted playsinline src="simpler/Media4.mp4"></video>
+                            <p>Simpler Task 4</p>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="video-group">
+                    <h3>Bridge to Real-Robot Tasks (VLA, zeroshot)</h3>
+                    <div class="video-grid">
+                        <article class="video-card">
+                            <video controls preload="metadata" muted playsinline src="widowX/Chessboard.mp4"></video>
+                            <p>Put chess on chessboard</p>
+                        </article>
+                        <article class="video-card">
+                            <video controls preload="metadata" muted playsinline src="widowX/Corn.mp4"></video>
+                            <p>Put Corn between Cups</p>
+                        </article>
+                        <article class="video-card">
+                            <video controls preload="metadata" muted playsinline src="widowX/Cuponplate.mp4"></video>
+                            <p>Put Pink Cup on blue Plate</p>
+                        </article>
+                        <article class="video-card">
+                            <video controls preload="metadata" muted playsinline src="widowX/Eggplant.mp4"></video>
+                            <p>Put Eggplant in the pot</p>
+                        </article>
+                        <article class="video-card">
+                            <video controls preload="metadata" muted playsinline src="widowX/Lobstar.mp4"></video>
+                            <p>Put Lobster in the pan</p>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="video-group">
+                    <h3>Realworld Recovery / Success-After-Fail</h3>
+                    <div class="video-grid">
+                        <article class="video-card">
+                            <video controls preload="metadata" muted playsinline
+                                src="success_after_fail/corn.mp4"></video>
+                            <p>Corn Recovery Sequence</p>
+                        </article>
+                        <article class="video-card">
+                            <video controls preload="metadata" muted playsinline
+                                src="success_after_fail/eggplant.mp4"></video>
+                            <p>Eggplant Recovery Sequence</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>
