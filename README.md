@@ -16,14 +16,15 @@ git clone https://github.com/huggingface/lerobot.git
 cd lerobot
 git checkout v0.4.2
 pip install -e .
+cd ..
 ```
 
 you can also consider installing the 0.4.2 version lerobot directly from pip, as we do not change any lerobot code, but we recommend installing from source for easier debugging and modification.
 
 ## Install this policy package
+Inside this repo folder
 
 ```bash
-cd /path/to/lerobot/art
 pip install -e .
 ```
 
