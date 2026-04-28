@@ -1,0 +1,7 @@
+# Python package artifacts
+*.egg
+*.egg-info/
+__pycache__/
+
+# Training outputs
+outputs/

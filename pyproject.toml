@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lerobot_policy_art"
+version = "0.1.0"
+description = "ART policy package for LeRobot"
+requires-python = ">= 3.10"
+dependencies = [
+    "lerobot",
+    "torch",
+    "torchvision",
+    "transformers",
+    "einops",
+    "numpy",
+]
+
+[tool.setuptools]
+packages = ["lerobot_policy_art"]
+package-dir = {"lerobot_policy_art" = "."}
